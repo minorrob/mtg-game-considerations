@@ -1,0 +1,1076 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MtG Game Considerations</title>
+<meta name="description" content="A shared proposal for how a Commander table plays: what makes games great, what makes them drag, the table's agreed considerations, and a place to sign.">
+<meta name="theme-color" content="#F2F4F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151D1B" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F2F4F0;
+    --paper-2: #E8ECE6;
+    --ink: #1C2624;
+    --ink-2: #4A5755;
+    --ink-3: #7B8886;
+    --line: #CDD4CF;
+    --good: #2F6B52;
+    --good-soft: #DCEAE2;
+    --bad: #9A3E33;
+    --bad-soft: #F0DCD8;
+    --gold: #A8771C;
+    --gold-soft: #F1E6CC;
+    --focus: #1D5FA8;
+    --radius: 10px;
+    --max: 680px;
+    --pad: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #151D1B;
+      --paper-2: #1E2927;
+      --ink: #E8ECE8;
+      --ink-2: #B5C0BC;
+      --ink-3: #7F8D89;
+      --line: #2F3C39;
+      --good: #7FC9A4;
+      --good-soft: #1E3A2E;
+      --bad: #E39B8E;
+      --bad-soft: #432420;
+      --gold: #E2B55C;
+      --gold-soft: #3E3217;
+      --focus: #8DB8F0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #151D1B;
+    --paper-2: #1E2927;
+    --ink: #E8ECE8;
+    --ink-2: #B5C0BC;
+    --ink-3: #7F8D89;
+    --line: #2F3C39;
+    --good: #7FC9A4;
+    --good-soft: #1E3A2E;
+    --bad: #E39B8E;
+    --bad-soft: #432420;
+    --gold: #E2B55C;
+    --gold-soft: #3E3217;
+    --focus: #8DB8F0;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    padding-bottom: max(32px, env(safe-area-inset-bottom));
+  }
+  a { color: var(--good); }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+  /* Header */
+  .masthead {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 28px var(--pad) 10px;
+  }
+  .masthead h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(30px, 8vw, 40px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+  }
+  .masthead p {
+    margin: 0;
+    color: var(--ink-2);
+    font-size: 15px;
+    max-width: 52ch;
+  }
+
+  /* Top tabs */
+  .tabs {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .tabs-inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 var(--pad);
+  }
+  .tab {
+    appearance: none;
+    background: none;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    padding: 12px 4px 10px;
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--ink-3);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+
+  main { max-width: var(--max); margin: 0 auto; padding: 18px var(--pad) 0; }
+  .panel[hidden] { display: none; }
+
+  /* Segmented Good / Bad */
+  .seg {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 4px;
+    background: var(--paper-2);
+    border-radius: 999px;
+    margin: 0 0 18px;
+  }
+  .seg button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    border-radius: 999px;
+    padding: 10px 8px;
+    font-weight: 600;
+    color: var(--ink-3);
+    cursor: pointer;
+  }
+  .seg button[aria-selected="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .seg[data-mode="good"] button[aria-selected="true"] { color: var(--good); }
+  .seg[data-mode="bad"] button[aria-selected="true"] { color: var(--bad); }
+
+  .lede {
+    margin: 0 0 16px;
+    color: var(--ink-2);
+    font-size: 15px;
+  }
+
+  h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.15;
+    margin: 28px 0 8px;
+  }
+  h2:first-child { margin-top: 6px; }
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 20px 0 8px;
+  }
+  p { margin: 0 0 12px; }
+
+  /* Tier accordions */
+  .tier {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin: 0 0 10px;
+    background: var(--paper);
+    overflow: hidden;
+  }
+  .tier > summary {
+    list-style: none;
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 14px;
+  }
+  .tier > summary::-webkit-details-marker { display: none; }
+  .meter {
+    display: inline-flex;
+    gap: 3px;
+  }
+  .meter i {
+    display: block;
+    width: 7px;
+    height: 16px;
+    border-radius: 2px;
+    background: var(--line);
+  }
+  .tier[data-kind="good"] .meter i.on { background: var(--good); }
+  .tier[data-kind="bad"] .meter i.on { background: var(--bad); }
+  .tier-name {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 1.1;
+  }
+  .tier-sub {
+    display: block;
+    font-family: "Manrope", sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-top: 2px;
+  }
+  .chev {
+    width: 18px; height: 18px;
+    color: var(--ink-3);
+    transition: transform .18s ease;
+  }
+  .tier[open] > summary .chev { transform: rotate(180deg); }
+  .tier-body {
+    border-top: 1px solid var(--line);
+    padding: 6px 14px 10px;
+    background: var(--paper-2);
+  }
+
+  /* Items */
+  .item {
+    border-bottom: 1px solid var(--line);
+  }
+  .item:last-child { border-bottom: 0; }
+  .item > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 11px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: baseline;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .item > summary::-webkit-details-marker { display: none; }
+  .item > summary .plus {
+    flex: none;
+    color: var(--ink-3);
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .item[open] > summary .plus { display: none; }
+  .item > summary .minus { display: none; flex: none; color: var(--ink-3); font-size: 18px; line-height: 1; }
+  .item[open] > summary .minus { display: block; }
+  .item-body { padding: 0 0 12px; font-size: 14.5px; }
+  .kv { display: grid; grid-template-columns: 74px 1fr; gap: 6px 10px; margin: 0; }
+  .kv dt { color: var(--ink-3); font-weight: 600; font-size: 13px; padding-top: 1px; }
+  .kv dd { margin: 0; color: var(--ink); }
+  .kv dd.cards { color: var(--ink-2); }
+  .seq { color: var(--ink-2); }
+  .seq b { color: var(--ink); font-weight: 600; }
+
+  /* Taking the hit */
+  .hit {
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--good);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin: 0 0 10px;
+    background: var(--paper);
+  }
+  .hit h4 {
+    margin: 0 0 8px;
+    font-size: 15.5px;
+    font-weight: 700;
+  }
+  .hit dl { margin: 0; display: grid; grid-template-columns: 64px 1fr; gap: 5px 10px; font-size: 14.5px; }
+  .hit dt { font-weight: 600; font-size: 13px; color: var(--ink-3); padding-top: 1px; }
+  .hit dd { margin: 0; }
+  .hit dd.skip { color: var(--ink-3); }
+  .rule {
+    background: var(--good-soft);
+    color: var(--ink);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin: 0 0 18px;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.35;
+    font-weight: 500;
+  }
+  .rule.bad { background: var(--bad-soft); }
+  .rule.gold { background: var(--gold-soft); }
+
+  /* Considerations */
+  .def { margin: 0 0 10px; }
+  .def dt { font-weight: 700; margin-top: 10px; }
+  .def dd { margin: 2px 0 0; color: var(--ink-2); }
+  ul.plain { padding-left: 20px; margin: 0 0 14px; }
+  ul.plain li { margin: 0 0 6px; }
+  ul.check { list-style: none; padding: 0; margin: 0 0 14px; }
+  ul.check li {
+    position: relative;
+    padding: 9px 0 9px 30px;
+    border-bottom: 1px solid var(--line);
+  }
+  ul.check li:last-child { border-bottom: 0; }
+  ul.check li::before {
+    content: "";
+    position: absolute;
+    left: 2px; top: 13px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--good);
+  }
+  ul.check.off li::before { border-color: var(--bad); border-radius: 3px; }
+  ul.check.manners li::before { border-color: var(--gold); border-radius: 3px; }
+  ul.check.sting li::before { border-color: var(--gold); }
+  .shape { display: grid; gap: 8px; margin: 0 0 16px; }
+  .shape div { display: grid; grid-template-columns: 86px 1fr; gap: 10px; font-size: 14.5px; }
+  .shape span:first-child { font-weight: 700; }
+  .shape span:last-child { color: var(--ink-2); }
+
+  /* Sign */
+  .sign-intro { margin-bottom: 16px; }
+  .signatures { list-style: none; padding: 0; margin: 0 0 20px; }
+  .signatures li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .signatures .name {
+    font-family: "Fraunces", Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.1;
+  }
+  .signatures .meta { color: var(--ink-3); font-size: 13px; white-space: nowrap; }
+  .signatures .pending .meta { color: var(--gold); }
+  .empty { color: var(--ink-3); font-size: 14.5px; padding: 8px 0 16px; }
+
+  form.sign { display: grid; gap: 10px; margin: 0 0 16px; }
+  form.sign label { font-weight: 600; font-size: 14px; }
+  form.sign input {
+    width: 100%;
+    font: inherit;
+    font-size: 17px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  form.sign input:focus { outline: 3px solid var(--focus); outline-offset: 1px; border-color: transparent; }
+  .btn {
+    appearance: none;
+    border: 0;
+    border-radius: var(--radius);
+    padding: 13px 16px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn.secondary { background: var(--paper-2); color: var(--ink); border: 1px solid var(--line); }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .note { font-size: 14px; color: var(--ink-2); }
+  code.line {
+    display: block;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 8px 0;
+  }
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  .toast.show { opacity: 1; }
+  footer {
+    max-width: var(--max);
+    margin: 28px auto 0;
+    padding: 16px var(--pad) 0;
+    border-top: 1px solid var(--line);
+    color: var(--ink-3);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <h1>MtG Game Considerations</h1>
+  <p>A shared proposal for how our Commander table plays. Everyone reads the same page, everyone signs the same page.</p>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="tabs-inner" role="tablist">
+    <button class="tab" role="tab" id="tab-play" aria-controls="panel-play" aria-selected="true">Playing MtG</button>
+    <button class="tab" role="tab" id="tab-rules" aria-controls="panel-rules" aria-selected="false">Considerations</button>
+    <button class="tab" role="tab" id="tab-sign" aria-controls="panel-sign" aria-selected="false">Sign</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ============ PLAYING MTG ============ -->
+  <section class="panel" id="panel-play" role="tabpanel" aria-labelledby="tab-play">
+    <div class="seg" data-mode="good" role="tablist" aria-label="Good or Bad">
+      <button role="tab" id="seg-good" aria-selected="true" aria-controls="good">Good</button>
+      <button role="tab" id="seg-bad" aria-selected="false" aria-controls="bad">Bad</button>
+    </div>
+
+    <div id="good">
+      <p class="lede">What makes a game one people want to play again. Tiers run from the rare, generous stuff down to small courtesies. Tap a tier to see what's in it, tap an item for examples.</p>
+      <div id="good-tiers"></div>
+
+      <h2>Taking the hit</h2>
+      <p class="lede">The things that sting, and how a table handles them without anyone getting bent out of shape. Each one has the generous response, the everyday baseline, and the version to skip.</p>
+      <div class="rule">The only complaint that belongs at the table is a question. The only protest belongs after the game, as a Rule 0 note.</div>
+      <div id="hits"></div>
+    </div>
+
+    <div id="bad" hidden>
+      <p class="lede">What makes a game drag or sour. The tier names describe how a table tends to react, not who anyone is. Most of us have done something on this list; the point is knowing where it sits.</p>
+      <div id="bad-tiers"></div>
+    </div>
+  </section>
+
+  <!-- ============ CONSIDERATIONS ============ -->
+  <section class="panel" id="panel-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
+    <h2>The game we're aiming for</h2>
+    <div class="rule gold">A couple of hours that feel like a game, not a chore or a tournament. Every deck gets to do its thing at least once. The complexity is the fun. Stings are allowed. Bad feelings are not.</div>
+
+    <h3>Definitions</h3>
+    <dl class="def">
+      <dt>Power level</dt>
+      <dd>Strong Bracket 2 to 3. Up to three game changers per deck, no mass land destruction, no chained extra turns, no two-card infinite combos before the late game, tutors present but not the engine.</dd>
+      <dt>Fun combo</dt>
+      <dd>A line that takes setup, is visible on the board, can be answered, and wins or swings the game in a way people enjoy watching. Kiki loops, aristocrat drains, counters doubling, Voltron with equipment.</dd>
+      <dt>Play it out</dt>
+      <dd>Games go to the end unless the result is mathematically locked. Nobody scoops at 20 life with cards in hand.</dd>
+      <dt>Every deck gets its moment</dt>
+      <dd>Each player should get to cast their commander, resolve their engine, and attempt their win before the game is decided, barring a bad draw.</dd>
+      <dt>Sting</dt>
+      <dd>A single play that hurts and makes someone laugh. A Rift at an end step, a stolen creature, a timely Settle, a surprise Triumph. The test: is the person it hit still having fun two turns later?</dd>
+      <dt>Late game</dt>
+      <dd>Roughly turn seven onward at this table.</dd>
+    </dl>
+
+    <h3>Shape of a typical game</h3>
+    <div class="shape">
+      <div><span>Turns 1 to 4</span><span>Ramp, commanders, nobody gets punished for developing.</span></div>
+      <div><span>Turns 5 to 8</span><span>Engines online, interaction starts, politics live.</span></div>
+      <div><span>Turn 8 on</span><span>Win attempts, answers, a sting or two, game ends on a visible line.</span></div>
+    </div>
+
+    <h2>Do</h2>
+    <ul class="check">
+      <li>Declare power honestly before shuffling: bracket, game changers, win conditions, anything that stings.</li>
+      <li>Let the first four turns breathe. Save removal for engines and win conditions.</li>
+      <li>Telegraph: announce combo pieces in hand or on board a turn ahead.</li>
+      <li>Shortcut known loops: show the pieces, state the loop, state the result, ask for responses.</li>
+      <li>Play to the end. Concede only when locked out, never in response to something.</li>
+      <li>Spread damage by threat, not by seat.</li>
+      <li>Announce every trigger, yours and everyone else's.</li>
+      <li>Keep the board legible: life tracked, counters readable, tapped means tapped.</li>
+      <li>If an answer can wait a turn, let the deck work first.</li>
+      <li>Honor deals exactly as spoken.</li>
+      <li>Allow a takeback before new information is revealed.</li>
+      <li>Keep stings to about one per player per game.</li>
+      <li>Proxies are welcome.</li>
+      <li>Good game, every game.</li>
+    </ul>
+
+    <h2>Off the table</h2>
+    <p class="lede">Card lines the table agrees not to run. A deckbuilding rule, not a judgment of anyone's collection.</p>
+    <ul class="check off">
+      <li>Mass land destruction (Armageddon, Jokulhaups, Ruination and the like).</li>
+      <li>Chained extra turns. A single Time Warp is fine.</li>
+      <li>Two-card infinites before turn seven. No Thassa's Oracle lines at all.</li>
+      <li>Hard stax (Stasis, Winter Orb, Smokestack). Single tax pieces are fine.</li>
+      <li>Mindslaver effects that take a player's turn.</li>
+      <li>Permanent commander theft (Gilded Drake). Temporary steal effects are fine.</li>
+    </ul>
+
+    <h2>Table manners</h2>
+    <ul class="check manners">
+      <li>No sandbagging. A declared bracket is the real bracket.</li>
+      <li>No narrating every card of a known loop.</li>
+      <li>No piloting other people's turns. Deck talk happens after the game.</li>
+      <li>No grudge targeting. Last game is last game.</li>
+      <li>No spite scoops.</li>
+      <li>No phone through combat.</li>
+      <li>No mid-game fairness debates. Park it for after.</li>
+      <li>No table-captain threat calls. Name a threat once, let people decide.</li>
+      <li>No post-game "I would have won."</li>
+    </ul>
+
+    <h2>Stings we're fine with</h2>
+    <p class="lede">Done with a grin, roughly once per player per game.</p>
+    <ul class="check sting">
+      <li>Overloaded Cyclonic Rift once, at an end step, when the game needs a reset.</li>
+      <li>Settle the Wreckage or Teferi's Protection on a lethal swing.</li>
+      <li>Triumph of the Hordes or Craterhoof as a finisher.</li>
+      <li>Insurrection, or a single Control Magic effect.</li>
+      <li>Blood Moon, only if announced before the game and the table says yes.</li>
+      <li>Mill as a secondary win condition, not the whole plan.</li>
+      <li>Rhystic Study, Smothering Tithe: one tax piece at a time.</li>
+    </ul>
+
+    <h2>Raising something</h2>
+    <ul class="plain">
+      <li>After the game, not during.</li>
+      <li>Once, as a Rule 0 note: "next time, can we treat X as off the table?"</li>
+      <li>About the play, not the player.</li>
+      <li>If the table agrees, it goes on this page. If not, it drops.</li>
+    </ul>
+  </section>
+
+  <!-- ============ SIGN ============ -->
+  <section class="panel" id="panel-sign" role="tabpanel" aria-labelledby="tab-sign" hidden>
+    <h2>Sign</h2>
+    <p class="sign-intro lede">Signing means you've read the Considerations and you're in. It's a handshake, not a contract. Anything on the page can change when the table agrees.</p>
+
+    <h3>Signed</h3>
+    <ul class="signatures" id="signatures"></ul>
+    <p class="empty" id="sig-empty" hidden>Nobody has signed yet.</p>
+
+    <form class="sign" id="sign-form" autocomplete="off">
+      <label for="sig-name">Your name</label>
+      <input id="sig-name" name="name" type="text" maxlength="40" placeholder="How you want it to appear" required>
+      <div class="btn-row">
+        <button type="submit" class="btn">Sign the Considerations</button>
+      </div>
+    </form>
+
+    <div id="sig-result" hidden>
+      <p class="note">Signed on this device. To make it permanent for everyone, this line gets added to the <code>SIGNATURES</code> list in the page's code.</p>
+      <code class="line" id="sig-line"></code>
+      <div class="btn-row">
+        <button type="button" class="btn secondary" id="copy-line">Copy line</button>
+        <a class="btn secondary" id="issue-link" href="#" target="_blank" rel="noopener" hidden>Send to the repo</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Built for one table, written for any table. Fork it, change the Considerations, keep the Taking the hit section.
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   SIGNATURES
+   One entry per person who signed. Add new lines here when
+   someone signs on their phone and sends you the line.
+   ============================================================ */
+const SIGNATURES = [
+  // { name: "Rob", date: "2026-10-17" },
+];
+
+/* Optional: a GitHub repo URL. If set, the Sign tab offers a
+   prefilled issue so a signer can send their line without
+   touching code. Example: "https://github.com/user/repo" */
+const REPO_URL = "https://github.com/minorrob/mtg-game-considerations";
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+const GOOD_TIERS = [
+  {
+    name: "Saint", level: 4,
+    sub: "The generous moves. Rare, and remembered.",
+    items: [
+      { name: "Honest power statement before the game",
+        looks: "\u201cUpgraded precon, three game changers, can combo around turn eight with Exquisite Blood plus Sanguine Bond, no land destruction, no extra turns.\u201d",
+        seq: ["Name the bracket", "Name the game changers", "Name the win conditions", "Name anything that stings", "Ask if that works for the table"] },
+      { name: "Pointing out a missed trigger that hurts you",
+        cards: "Rhystic Study, Smothering Tithe, Esper Sentinel, Zulaport Cutthroat, Impact Tremors",
+        looks: "\u201cYou\u2019ve got a Tithe trigger. I\u2019m not paying.\u201d",
+        seq: ["Opponent casts", "You spot their on-board trigger", "You announce it before they do", "They resolve it"] },
+      { name: "Teaching without piloting",
+        looks: "\u201cYou have two options here, one faster, one safer,\u201d then letting them choose. Explain stack timing once, then let them run it." },
+      { name: "Lending a deck tuned to the table",
+        looks: "A spare at the same bracket, with a one-card cheat sheet for how it wins." },
+      { name: "Announcing the combo turn a cycle ahead",
+        looks: "\u201cNext turn I\u2019ll have Kiki plus Zealous Conscripts if nobody deals with Kiki.\u201d",
+        seq: ["Assemble piece one", "Say the second piece exists in hand or tutor range", "Pass", "The table gets a full round to answer"] },
+      { name: "Clean scoop",
+        looks: "Dead on board, no answers, concedes at a point that doesn\u2019t change anyone else\u2019s game. Never in response to a drain trigger or a steal." },
+      { name: "Proxies and budget decks, no comment",
+        looks: "\u201cPrinted Jeweled Lotus? Cool, play it.\u201d" },
+      { name: "Shortcutting a known loop",
+        cards: "Kiki-Jiki + Zealous Conscripts, Exquisite Blood + Sanguine Bond, Thornbite Staff + Viscera Seer, Rings of Brighthearth + Basalt Monolith",
+        seq: ["Show the pieces", "State the loop once", "State the result (\u201cinfinite hasty tokens, swinging for lethal\u201d)", "\u201cAny responses?\u201d", "Done"] },
+    ]
+  },
+  {
+    name: "Warm", level: 3,
+    sub: "Plays that keep the table whole.",
+    items: [
+      { name: "Rule 0 started, not endured",
+        looks: "Asking the table what everyone brought before shuffling, not after someone complains." },
+      { name: "Removal spent on the real threat",
+        cards: "Swords to Plowshares, Beast Within, Generous Gift, Assassin\u2019s Trophy",
+        looks: "Swords on the Craterhoof, not on the 2/2 that hit you last turn." },
+      { name: "Group hug that actually helps",
+        cards: "Tempt with Discovery, Collective Voyage, Kynaios and Tiro of Meletis, Howling Mine, Rites of Flourishing, Veteran Explorer, Zedruu gifting back a pacified creature",
+        seq: ["Tempt with Discovery", "Everyone takes a land", "You take one per taker", "Table ramps, you ramp a bit more"] },
+      { name: "Honoring a deal to the end",
+        looks: "\u201cI won\u2019t attack you this turn\u201d means no attack, no trigger ping, no \u201ctechnically.\u201d" },
+      { name: "Protecting a third player",
+        cards: "Fog, Holy Day, Darkness, Spore Frog, Arachnogenesis, Deflecting Palm",
+        seq: ["Archenemy swings at the weakest seat", "You Fog", "Game stays four-player"] },
+      { name: "The new player gets a full turn",
+        looks: "No turn-two Strip Mine on their only dual. No counter on their first commander cast." },
+      { name: "The courtesy takeback",
+        looks: "Tapped wrong before any new information was revealed: \u201cgo ahead.\u201d After a card is drawn or a spell resolves, it stands." },
+      { name: "Telegraphed clocks",
+        cards: "Voltron commanders (Rafiq, Sram), token swarms, Hydra decks",
+        looks: "A visible board, commander damage tracked out loud: \u201cI\u2019m at 15 commander on you.\u201d" },
+    ]
+  },
+  {
+    name: "Pleasant", level: 2,
+    sub: "The everyday baseline.",
+    items: [
+      { name: "Clean board state",
+        looks: "Life on a tower or app, counters readable from across the table, tapped cards actually turned." },
+      { name: "Quick turns",
+        looks: "Decisions made during other turns, lands first, \u201cgoing to combat\u201d called clearly." },
+      { name: "Read once, when asked",
+        looks: "Oracle text once, no editorializing. \u201cIt taps for two, that\u2019s all.\u201d" },
+      { name: "Clear combat",
+        seq: ["\u201cBeginning of combat, any effects?\u201d", "\u201cAttacking X with A and B, Y with C\u201d", "Blocks", "Damage, no retroactive redirects"] },
+      { name: "Balanced targets",
+        looks: "Damage spread across the game, aimed by threat, not by friendship." },
+      { name: "Ask before touching cards",
+        looks: "\u201cCan I look at your graveyard?\u201d \u201cMind if I count your library?\u201d" },
+      { name: "Resolving triggers for others",
+        looks: "\u201cYou\u2019ve got a Study trigger.\u201d \u201cImpact Tremors, you take three.\u201d" },
+      { name: "Graceful loss",
+        looks: "No \u201cI would have won if\u201d postmortem. Handshake, next game." },
+    ]
+  },
+  {
+    name: "Nice", level: 1,
+    sub: "Small courtesies that add up.",
+    items: [
+      { name: "\u201cGood game\u201d every game" },
+      { name: "\u201cNice line\u201d on a good play, especially one that beat you" },
+      { name: "Snacks, sleeves, mats, dice within reach" },
+      { name: "One riffle, cut, go" },
+      { name: "A one-sentence deck intro" },
+      { name: "Phone face down through combat" },
+      { name: "Thanks to the host" },
+    ]
+  },
+];
+
+const BAD_TIERS = [
+  {
+    name: "Table-flip", level: 4,
+    sub: "Games end, or people don\u2019t come back.",
+    items: [
+      { name: "Sandbagging power level",
+        looks: "\u201cIt\u2019s a 6, just value,\u201d then Thassa\u2019s Oracle on turn four. A pre-game lie, not a misjudgment." },
+      { name: "Mass land destruction",
+        cards: "Armageddon, Ravages of War, Jokulhaups, Obliterate, Decree of Annihilation",
+        looks: "Resolved while ahead on board, then \u201cI just want to slow things down.\u201d",
+        seq: ["Indestructible or non-land mana in place", "Armageddon", "Table topdecks lands for eight turns while they swing"] },
+      { name: "Hard stax locks",
+        cards: "Stasis, Winter Orb, Static Orb, Smokestack, Tangle Wire, Hokori",
+        looks: "Nothing happens for 45 minutes and one deck was built for it.",
+        seq: ["Stasis plus Frozen Aether or Forsaken City", "Nobody untaps", "Upkeep cost cycled forever"] },
+      { name: "Turn two or three infinite wins",
+        cards: "Thassa\u2019s Oracle + Demonic Consultation, Flash + Protean Hulk, Underworld Breach + Brain Freeze",
+        looks: "Shuffled up casually, \u201cI\u2019m on a 7,\u201d wins before anyone has three lands.",
+        seq: ["Turn one Sol Ring, Mana Crypt", "Turn two Consultation naming a card not in the deck", "Oracle enters with an empty library", "Win on resolution"] },
+      { name: "Taking a whole turn",
+        cards: "Mindslaver, Emrakul the Promised End, Worst Fears",
+        looks: "Your removal on your own board, your creatures into your allies, your fetches cracked for nothing.",
+        seq: ["Mindslaver plus Academy Ruins", "Return it to the top each turn", "One player never gets a real turn again"] },
+      { name: "Spite scoop",
+        looks: "Conceding in response to a spell or attack to deny a kill, a drain trigger, or a steal, handing the game to someone else." },
+      { name: "Chained extra turns",
+        cards: "Expropriate, Time Warp, Temporal Mastery, Nexus of Fate, Alrund\u2019s Epiphany",
+        looks: "\u201cOne more turn\u2026 and one more.\u201d Table scrolls their phones.",
+        seq: ["Nexus of Fate plus Narset\u2019s Reversal or Eternal Witness loops", "Extra turn every turn"] },
+      { name: "Permanent commander theft",
+        cards: "Gilded Drake, Treachery, Control Magic, Agent of Treachery, Sower of Temptation",
+        looks: "A commander held as a blocker all game with no way home.",
+        seq: ["Gilded Drake targeting the commander", "Swap", "It only returns to the command zone if it would die or be exiled, which the thief avoids"] },
+      { name: "Grudge targeting",
+        looks: "Same seat every game regardless of board. \u201cYou killed my commander in 2023.\u201d" },
+      { name: "Rules-lawyering a win",
+        looks: "Retroactive \u201cI had the trigger,\u201d or declaring an infinite loop that can\u2019t actually be demonstrated." },
+    ]
+  },
+  {
+    name: "Groan", level: 3,
+    sub: "The game continues. Nobody\u2019s enjoying it.",
+    items: [
+      { name: "Narrating a known loop card by card",
+        looks: "Every oracle text read aloud, a deterministic loop resolved one iteration at a time, fifteen minutes to announce a win everyone saw three cards in. Drops a tier if the player is new or the combo is new to the table." },
+      { name: "Repeatable mass bounce",
+        cards: "Cyclonic Rift, Evacuation, Aetherize, Coastal Breach",
+        seq: ["Hold seven mana for three turns", "End-step overloaded Rift the turn before yours", "Untap and swing into an empty table"] },
+      { name: "Backseat piloting",
+        looks: "\u201cYou should have attacked him,\u201d \u201cwhy would you counter that,\u201d \u201cplay the land first.\u201d Also unsolicited critiques of someone else\u2019s 99 before the game." },
+      { name: "Nonbasic hate",
+        cards: "Blood Moon, Magus of the Moon, Back to Basics, Ruination, Archon of Emeria",
+        looks: "A three-color deck with two basics becomes a Mountain deck.",
+        seq: ["Cast off rocks on turn two or three", "Five-color seat locked for the game"] },
+      { name: "Draw and tutor ambushes",
+        cards: "Hullbreacher, Opposition Agent, Narset Parter of Veils, Notion Thief, Drannith Magistrate, Aven Mindcensor",
+        seq: ["Opponent casts Windfall", "Flash Hullbreacher", "They discard, you get seven Treasures"] },
+      { name: "Draw-go counter everything",
+        cards: "Counterspell, Mana Drain, Force of Will, Fierce Guardianship, Swan Song",
+        looks: "Four mana up every turn, countering a three-drop \u201cbecause I didn\u2019t want to deal with it later.\u201d" },
+      { name: "Takebacks for one seat only",
+        looks: "\u201cWait, I meant to crack the fetch first\u201d every turn, with the same courtesy denied to others." },
+      { name: "The same tutored combo every game",
+        cards: "Demonic Tutor, Vampiric Tutor, Enlightened Tutor, Worldly Tutor, Entomb",
+        seq: ["Turn one Vampiric at end step", "Turn two draw piece one", "Turn three Demonic for piece two", "Turn four win"] },
+      { name: "Mass discard and hand locks",
+        cards: "Jin-Gitaxias Core Augur, Mind Twist, Myojin of Night\u2019s Reach, Tergrid",
+        seq: ["Cheat Jin-Gitaxias in via Sneak Attack or Reanimate", "Opponents\u2019 hand size becomes zero at end step", "Table empty-handed by turn five"] },
+      { name: "Bargain and break",
+        looks: "A deal struck, broken the next turn, \u201cit\u2019s just politics.\u201d" },
+      { name: "Naming a mono-color player\u2019s whole deck",
+        cards: "Iona (banned, still seen), Meddling Mage, Nevermore, Pithing Needle on a commander",
+        seq: ["Reanimate", "Iona naming the mono-green player\u2019s color", "That seat plays lands only"] },
+      { name: "Asymmetric lockouts",
+        cards: "Vorinclex Monstrous Raider, Jin-Gitaxias Progress Tyrant, Elesh Norn Grand Cenobite, Urabrask the Hidden",
+        looks: "\u201cEveryone\u2019s counters are halved, mine are doubled.\u201d Planeswalkers become unplayable for the pod." },
+      { name: "Phone turns",
+        looks: "Absent for three turns, then \u201cwhat happened, what\u2019s on the board, who has what.\u201d" },
+      { name: "Spot land destruction on recursion",
+        cards: "Strip Mine, Wasteland, Dust Bowl, Ghost Quarter with Crucible of Worlds or Ramunap Excavator",
+        seq: ["Sac Strip Mine on a key land each turn", "Replay it from the graveyard"] },
+      { name: "Mid-game fairness debates",
+        looks: "Stopping play to argue whether a card is \u201cfair.\u201d" },
+    ]
+  },
+  {
+    name: "Side-eye", level: 2,
+    sub: "Noticed, tolerated, mentioned later.",
+    items: [
+      { name: "Untouchable commander",
+        cards: "Lightning Greaves, Swiftfoot Boots, Sigarda Host of Herons, Mother of Runes",
+        looks: "\u201cI\u2019m hexproof, you need a wipe,\u201d said every turn." },
+      { name: "Table-captain threat calls",
+        looks: "Announcing who everyone should attack, every turn, usually not themselves." },
+      { name: "Pillowfort with no clock",
+        cards: "Propaganda, Ghostly Prison, Sphere of Safety, Norn\u2019s Annex, Windborn Muse",
+        looks: "Nobody attacks them, they do nothing offensive, the game goes long." },
+      { name: "\u201cI\u2019m not a threat\u201d",
+        looks: "Said while holding the most dangerous board." },
+      { name: "Board wipe every turn, then nothing",
+        cards: "Wrath of God, Damnation, Blasphemous Act, Toxic Deluge, Farewell",
+        looks: "Wipes on five, seven, nine, never presents a win." },
+      { name: "Poison out of nowhere",
+        cards: "Blightsteel Colossus, Skithiryx, Triumph of the Hordes, Tainted Strike",
+        seq: ["Cheat Blightsteel in", "One connect, eleven counters, dead"] },
+      { name: "Trigger ambush",
+        looks: "Rhystic or Tithe not announced for two turns, then all of it claimed at once." },
+      { name: "Mill as the whole plan",
+        cards: "Bruvac the Grandiloquent, Maddening Cacophony, Fraying Sanity, Persistent Petitioners",
+        seq: ["Bruvac plus Fraying Sanity on a target", "Kicked Cacophony", "Target mills their library"] },
+      { name: "Sloppy state",
+        looks: "Untracked life, dice piles nobody can read, graveyard shuffled into exile." },
+      { name: "Chaos effects",
+        cards: "Warp World, Scrambleverse, Possibility Storm, Hive Mind, Confusion in the Ranks, Thieves\u2019 Auction",
+        seq: ["Hive Mind", "Any spell forces copies for everyone, pacts included", "Summoner\u2019s Pact kills non-green seats on upkeep"] },
+      { name: "Theft decks",
+        cards: "Marchesa the Black Rose, Merieke Ri Berit, Agent of Treachery, Mob Rule, Insurrection",
+        seq: ["Insurrection", "Untap and attack with the whole table\u2019s creatures"] },
+      { name: "Complaining about being targeted",
+        looks: "As the clear archenemy." },
+      { name: "Fast mana openers in a mid pod",
+        cards: "Sol Ring, Mana Crypt, Mana Vault, Jeweled Lotus, Chrome Mox, Dockside Extortionist",
+        seq: ["Turn one land, Sol Ring, Mana Crypt", "Five-drop commander", "Pod on turn one with one land"] },
+      { name: "Taxing the table",
+        cards: "Rhystic Study, Smothering Tithe, Esper Sentinel, Mystic Remora",
+        looks: "\u201cDo you pay the one?\u201d after every spell for twenty turns." },
+      { name: "Touching other players\u2019 cards",
+        looks: "Grabbing a graveyard to read it, flipping a library to count it." },
+      { name: "Fogging the decisive turn",
+        cards: "Teferi\u2019s Protection, Settle the Wreckage, Comeuppance, Deflecting Palm",
+        seq: ["Opponent swings all", "Settle the Wreckage", "Attackers exiled, their board gone, you get basics"] },
+      { name: "\u201cWhat does that do?\u201d on every card",
+        looks: "Then not listening to the answer." },
+      { name: "The alpha from nowhere",
+        cards: "Craterhoof Behemoth, Triumph of the Hordes, Overrun, Finale of Devastation",
+        seq: ["Natural Order or Finale for X equals ten", "Craterhoof enters", "Plus X, trample, across the table"] },
+      { name: "Voltron at the softest seat",
+        cards: "Rafiq of the Many, Uril the Miststalker, Sword of Feast and Famine, Blackblade Reforged",
+        seq: ["Equip Sword plus Blackblade", "Double strike", "Two hits, commander damage out"] },
+      { name: "Cheating fatties early",
+        cards: "Sneak Attack, Show and Tell, Through the Breach, Reanimate, Animate Dead",
+        seq: ["Turn one Entomb Blightsteel", "Turn two Reanimate", "Turn three swing"] },
+    ]
+  },
+  {
+    name: "Mild", level: 1,
+    sub: "Eye rolls. Fair game for ribbing.",
+    items: [
+      { name: "Lifegain to 200 with no clock", cards: "Oloro, Aetherflux Reservoir without the payoff" },
+      { name: "Draw commentary every turn", looks: "\u201cUgh, land.\u201d \u201cNice, exactly what I needed.\u201d" },
+      { name: "One counter saved for the one spell that mattered", cards: "Swan Song, Negate, Dovin\u2019s Veto" },
+      { name: "Pet-deck lore monologue", looks: "Five minutes on why this commander matters." },
+      { name: "Low-stakes kingmaking at the end" },
+      { name: "Pile-shuffle theater", looks: "Full pile shuffle before every game, then again after each search." },
+      { name: "\u201cReading the card explains the card\u201d commanders", cards: "Kinnan, Yuriko, Urza, Korvold, Ral Monsoon Mage" },
+      { name: "Over-celebration" },
+      { name: "Infinite tokens, no immediate win, long combat", cards: "Mycoloth, Scute Swarm, Nest of Scarabs loops" },
+      { name: "Mid-combat wandering", looks: "Leaving for a drink while declared as a blocker." },
+      { name: "Slow play and untracked triggers" },
+      { name: "Proxy negotiation mid-game", looks: "\u201cCan I just say this card is X\u201d after seeing the game state." },
+      { name: "Politics that stop mattering next turn" },
+    ]
+  },
+];
+
+const HITS = [
+  { event: "Getting attacked or alpha struck",
+    saint: "\u201cGood read, I was the threat.\u201d Reset the board without complaint.",
+    base: "Take the damage, track it, ask for triggers, move on.",
+    skip: "\u201cWhy me,\u201d listing everyone else\u2019s board, lobbying the table to hit the attacker next." },
+  { event: "Being targeted repeatedly in one game",
+    saint: "Ask once, neutrally: \u201cwhat\u2019s making me the threat?\u201d Then adjust or accept it.",
+    base: "Shrug, play tighter, don\u2019t bring it up again that game.",
+    skip: "\u201cYou guys always do this,\u201d folded arms, half-hearted turns." },
+  { event: "Board wipe on your engine",
+    saint: "\u201cThat was the right wipe,\u201d even when it hurt. Count what survived and rebuild.",
+    base: "Move the creatures cleanly, note death triggers, next turn.",
+    skip: "Sighing through the resolution, \u201cI only had one creature,\u201d asking why they didn\u2019t wait." },
+  { event: "Commander killed or exiled",
+    saint: "Pay the tax without commentary. \u201cSee you in two turns.\u201d",
+    base: "Track the tax out loud so the table knows your clock.",
+    skip: "\u201cThat\u2019s the third time,\u201d asking whether someone else\u2019s commander deserves it more." },
+  { event: "Spell countered",
+    saint: "\u201cThat was the one to counter, nice.\u201d Keep developing.",
+    base: "Move to the next line. Don\u2019t bait a second counter with an angry overcommit.",
+    skip: "\u201cYou counter everything,\u201d announcing you\u2019ll hold spells now." },
+  { event: "Creature or commander stolen",
+    saint: "Tell them how it works so they play it right. \u201cIt has a tap ability, don\u2019t forget.\u201d",
+    base: "Note the clock, work on removal or recovery, no grudge toward the thief.",
+    skip: "\u201cI\u2019m not helping you with my own card,\u201d misreading its text on purpose." },
+  { event: "Stax or tax lands on you",
+    saint: "Play the puzzle. \u201cFine, I\u2019ll pay the one.\u201d",
+    base: "Pay or don\u2019t pay consistently, don\u2019t relitigate each trigger.",
+    skip: "Ignoring the trigger, delaying every spell to argue the tax." },
+  { event: "Someone combos off and wins",
+    saint: "\u201cShow me the line.\u201d \u201cThat was a fun deck to lose to.\u201d",
+    base: "Confirm the loop works, scoop, shuffle up.",
+    skip: "\u201cThat\u2019s not a Bracket 3 deck,\u201d challenging each iteration, auditing their 99 afterward." },
+  { event: "Land destroyed",
+    saint: "\u201cFair, that land was doing a lot.\u201d",
+    base: "Note the mana loss, replan, no comment on their deck choice.",
+    skip: "\u201cWho plays Strip Mine in Commander,\u201d reading the card accusingly." },
+  { event: "Fogged or Settled on your big turn",
+    saint: "\u201cI walked into that.\u201d Rebuild.",
+    base: "Ask what gets exiled or returned, resolve it fully, no takeback requests.",
+    skip: "\u201cI would have won,\u201d hunting the card text for a loophole after the fact." },
+  { event: "A deal broken against you",
+    saint: "Let it go once, name it lightly (\u201cthat was fast\u201d), adjust trust next game.",
+    base: "Note it, make no more deals with that seat this game, no table lobbying.",
+    skip: "Retelling it every game for a year." },
+  { event: "Mill, infect, or an unfamiliar loss",
+    saint: "Ask how the deck works afterward. Suggest an answer they could add if they enjoyed it.",
+    base: "\u201cDidn\u2019t see it coming, good game.\u201d",
+    skip: "\u201cThat\u2019s not real Magic,\u201d refusing to play against the archetype." },
+  { event: "Dying first, early",
+    saint: "Stay at the table, track life for the rest, resolve triggers for others, no commentary.",
+    base: "Watch it out or step away quietly, no lobbying from the sideline.",
+    skip: "Kingmaking advice from the dead seat, \u201cif I were you,\u201d leaving mid-combat without a word." },
+  { event: "Opponent misplays into you",
+    saint: "Let them fix it before new information is revealed.",
+    base: "Take the value, no gloating.",
+    skip: "\u201cYou should have,\u201d celebrating the mistake." },
+  { event: "Losing to a sting you thought was out of bounds",
+    saint: "Play the game out. Raise it after as a Rule 0 note for next time.",
+    base: "Finish the game, mention it once after.",
+    skip: "Stopping mid-turn to litigate, scooping in protest." },
+];
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function meter(level) {
+  let out = '<span class="meter" aria-hidden="true">';
+  for (let i = 1; i <= 4; i++) out += `<i class="${i <= level ? "on" : ""}"></i>`;
+  return out + "</span>";
+}
+
+function renderItem(it) {
+  const hasBody = it.cards || it.looks || it.seq;
+  if (!hasBody) return `<div class="item"><div style="padding:11px 0;font-weight:600;font-size:15px">${esc(it.name)}</div></div>`;
+  let body = '<dl class="kv">';
+  if (it.cards) body += `<dt>Cards</dt><dd class="cards">${esc(it.cards)}</dd>`;
+  if (it.looks) body += `<dt>Looks like</dt><dd>${esc(it.looks)}</dd>`;
+  if (it.seq) body += `<dt>Sequence</dt><dd class="seq">${it.seq.map((s,i)=>`<b>${i+1}.</b> ${esc(s)}`).join(" &nbsp;")}</dd>`;
+  body += "</dl>";
+  return `<details class="item"><summary><span>${esc(it.name)}</span><span class="plus">+</span><span class="minus">\u2212</span></summary><div class="item-body">${body}</div></details>`;
+}
+
+function renderTiers(tiers, kind, mount) {
+  mount.innerHTML = tiers.map(t => `
+    <details class="tier" data-kind="${kind}">
+      <summary>
+        ${meter(t.level)}
+        <span><span class="tier-name">${esc(t.name)}</span><span class="tier-sub">${esc(t.sub)}</span></span>
+        <svg class="chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l5 5 5-5"/></svg>
+      </summary>
+      <div class="tier-body">${t.items.map(renderItem).join("")}</div>
+    </details>`).join("");
+}
+
+function renderHits(mount) {
+  mount.innerHTML = HITS.map(h => `
+    <div class="hit">
+      <h4>${esc(h.event)}</h4>
+      <dl>
+        <dt>Saint</dt><dd>${esc(h.saint)}</dd>
+        <dt>Baseline</dt><dd>${esc(h.base)}</dd>
+        <dt>Skip</dt><dd class="skip">${esc(h.skip)}</dd>
+      </dl>
+    </div>`).join("");
+}
+
+renderTiers(GOOD_TIERS, "good", document.getElementById("good-tiers"));
+renderTiers(BAD_TIERS, "bad", document.getElementById("bad-tiers"));
+renderHits(document.getElementById("hits"));
+
+/* ============================================================
+   TABS
+   ============================================================ */
+const topTabs = [...document.querySelectorAll(".tabs .tab")];
+const panels = [...document.querySelectorAll(".panel")];
+function showTab(id) {
+  topTabs.forEach(t => t.setAttribute("aria-selected", t.id === id ? "true" : "false"));
+  panels.forEach(p => p.hidden = p.getAttribute("aria-labelledby") !== id);
+  window.scrollTo({ top: 0 });
+  try { history.replaceState(null, "", "#" + id.replace("tab-", "")); } catch (e) {}
+}
+topTabs.forEach(t => t.addEventListener("click", () => showTab(t.id)));
+
+const seg = document.querySelector(".seg");
+const segBtns = [...seg.querySelectorAll("button")];
+function showSeg(id) {
+  segBtns.forEach(b => b.setAttribute("aria-selected", b.id === id ? "true" : "false"));
+  const mode = id === "seg-good" ? "good" : "bad";
+  seg.dataset.mode = mode;
+  document.getElementById("good").hidden = mode !== "good";
+  document.getElementById("bad").hidden = mode !== "bad";
+}
+segBtns.forEach(b => b.addEventListener("click", () => showSeg(b.id)));
+
+const hash = (location.hash || "").replace("#", "");
+if (["play", "rules", "sign"].includes(hash)) showTab("tab-" + hash);
+
+/* ============================================================
+   SIGN
+   ============================================================ */
+const KEY = "mtg-considerations-signature";
+const sigList = document.getElementById("signatures");
+const sigEmpty = document.getElementById("sig-empty");
+const sigForm = document.getElementById("sign-form");
+const sigName = document.getElementById("sig-name");
+const sigResult = document.getElementById("sig-result");
+const sigLine = document.getElementById("sig-line");
+const copyBtn = document.getElementById("copy-line");
+const issueLink = document.getElementById("issue-link");
+const toast = document.getElementById("toast");
+
+function readLocal() {
+  try { const v = localStorage.getItem(KEY); return v ? JSON.parse(v) : null; } catch (e) { return null; }
+}
+function writeLocal(obj) {
+  try { localStorage.setItem(KEY, JSON.stringify(obj)); return true; } catch (e) { return false; }
+}
+function fmtDate(iso) {
+  const d = new Date(iso + "T12:00:00");
+  return isNaN(d) ? iso : d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+function lineFor(s) {
+  return `  { name: "${s.name.replace(/"/g, '\\"')}", date: "${s.date}" },`;
+}
+function renderSignatures() {
+  const local = readLocal();
+  const committed = SIGNATURES.map(s => ({ ...s, pending: false }));
+  const alreadyCommitted = local && committed.some(s => s.name.toLowerCase() === local.name.toLowerCase());
+  const all = alreadyCommitted || !local ? committed : [...committed, { ...local, pending: true }];
+  sigList.innerHTML = all.map(s => `
+    <li class="${s.pending ? "pending" : ""}">
+      <span class="name">${esc(s.name)}</span>
+      <span class="meta">${s.pending ? "signed here, awaiting commit" : fmtDate(s.date)}</span>
+    </li>`).join("");
+  sigEmpty.hidden = all.length > 0;
+  if (local && !alreadyCommitted) {
+    sigForm.hidden = true;
+    sigResult.hidden = false;
+    sigLine.textContent = lineFor(local);
+    if (REPO_URL) {
+      const title = encodeURIComponent(`Signature: ${local.name}`);
+      const body = encodeURIComponent(`Please add this line to SIGNATURES in index.html:\n\n${lineFor(local)}`);
+      issueLink.href = `${REPO_URL.replace(/\/$/, "")}/issues/new?title=${title}&body=${body}`;
+      issueLink.hidden = false;
+    }
+  } else {
+    sigForm.hidden = false;
+    sigResult.hidden = true;
+  }
+}
+sigForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const name = sigName.value.trim().replace(/\s+/g, " ");
+  if (!name) return;
+  const today = new Date();
+  const date = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+  const ok = writeLocal({ name, date });
+  renderSignatures();
+  showToast(ok ? "Signed" : "Signed for this visit only");
+});
+copyBtn.addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(sigLine.textContent); showToast("Copied"); }
+  catch (e) { showToast("Select the line and copy it"); }
+});
+let toastTimer;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
+}
+renderSignatures();
+</script>
+</body>
+</html>
