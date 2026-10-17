@@ -1,9 +1,10 @@
 # MtG Game Considerations
 
-A one-page, mobile-first proposal for how a Commander table plays. Three tabs:
+A one-page, mobile-first proposal for how a Commander table plays. Four tabs:
 
 - **Playing MtG**: Good and Bad, each split into four tiers. Tap a tier for its items, tap an item for cards, what it looks like at the table, and the action sequence where there is one. Good also carries "Taking the hit": how to respond to attacks, wipes, counters, steals, and the other things people get bent out of shape over.
 - **Considerations**: the table's agreed power level, definitions, Do list, cards off the table, table manners, and the stings everyone is fine with.
+- **Bracket 3**: the official Upgraded bracket rules, quoted and linked to the Wizards articles, plus the current Game Changers list.
 - **Sign**: a handshake. Each person signs on their own phone.
 
 Live page: https://minorrob.github.io/mtg-game-considerations/

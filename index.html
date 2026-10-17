@@ -110,22 +110,74 @@
   .tabs-inner {
     max-width: var(--max);
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
     padding: 0 var(--pad);
+    overflow-x: auto;
+    scrollbar-width: none;
   }
+  .tabs-inner::-webkit-scrollbar { display: none; }
   .tab {
     appearance: none;
     background: none;
     border: 0;
     border-bottom: 3px solid transparent;
-    padding: 12px 4px 10px;
+    padding: 12px 2px 10px;
     font-weight: 600;
-    font-size: 14.5px;
+    font-size: 14px;
     color: var(--ink-3);
     cursor: pointer;
     white-space: nowrap;
+    flex: 0 0 auto;
   }
+  @media (min-width: 480px) { .tab { font-size: 15px; padding: 12px 6px 10px; } }
+
+  /* Bracket 3 */
+  .rulecard {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    margin: 0 0 10px;
+    background: var(--paper);
+    overflow: hidden;
+  }
+  .rulecard > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 13px 14px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .rulecard > summary::-webkit-details-marker { display: none; }
+  .rulecard > summary b { font-weight: 700; font-size: 15.5px; }
+  .rulecard > summary .gist { display: block; color: var(--ink-2); font-size: 13.5px; font-weight: 500; margin-top: 2px; }
+  .rulecard > summary .plus { flex: none; color: var(--ink-3); font-size: 18px; line-height: 1; }
+  .rulecard[open] > summary .plus { display: none; }
+  .rulecard > summary .minus { display: none; flex: none; color: var(--ink-3); font-size: 18px; line-height: 1; }
+  .rulecard[open] > summary .minus { display: block; }
+  .rulecard .body { border-top: 1px solid var(--line); background: var(--paper-2); padding: 12px 14px 6px; font-size: 14.5px; }
+  .rulecard .body dl { display: grid; grid-template-columns: 74px 1fr; gap: 6px 10px; margin: 0 0 8px; }
+  .rulecard .body dt { color: var(--ink-3); font-weight: 600; font-size: 13px; padding-top: 1px; }
+  .rulecard .body dd { margin: 0; }
+  .rulecard .body dd.q { font-family: "Fraunces", Georgia, serif; font-style: italic; font-size: 15px; }
+  .src { font-size: 13px; color: var(--ink-3); margin: 6px 0 6px; }
+  .src a { color: var(--good); font-weight: 600; }
+  .cmp { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 0 0 16px; }
+  .cmp th, .cmp td { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  .cmp th { font-size: 12.5px; color: var(--ink-3); font-weight: 600; }
+  .cmp td:first-child { font-weight: 600; white-space: nowrap; }
+  .cmp td.b3 { background: var(--gold-soft); }
+  .gc { columns: 2; column-gap: 18px; font-size: 14px; margin: 0 0 12px; padding: 0; list-style: none; }
+  .gc li { break-inside: avoid; padding: 3px 0; }
+  .gc li.new::after { content: "new"; font-size: 10.5px; font-weight: 700; color: var(--gold); margin-left: 6px; vertical-align: middle; }
+  .gc-group { font-weight: 700; font-size: 13px; color: var(--ink-3); margin: 10px 0 4px; }
+  ul.links { list-style: none; padding: 0; margin: 0 0 14px; }
+  ul.links li { padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+  ul.links li:last-child { border-bottom: 0; }
+  ul.links a { font-weight: 600; }
+  ul.links span { display: block; color: var(--ink-3); font-size: 13px; }
   .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
 
   main { max-width: var(--max); margin: 0 auto; padding: 18px var(--pad) 0; }
@@ -429,6 +481,7 @@
   <div class="tabs-inner" role="tablist">
     <button class="tab" role="tab" id="tab-play" aria-controls="panel-play" aria-selected="true">Playing MtG</button>
     <button class="tab" role="tab" id="tab-rules" aria-controls="panel-rules" aria-selected="false">Considerations</button>
+    <button class="tab" role="tab" id="tab-b3" aria-controls="panel-b3" aria-selected="false">Bracket 3</button>
     <button class="tab" role="tab" id="tab-sign" aria-controls="panel-sign" aria-selected="false">Sign</button>
   </div>
 </nav>
@@ -547,6 +600,131 @@
       <li>About the play, not the player.</li>
       <li>If the table agrees, it goes on this page. If not, it drops.</li>
     </ul>
+  </section>
+
+  <!-- ============ BRACKET 3 ============ -->
+  <section class="panel" id="panel-b3" role="tabpanel" aria-labelledby="tab-b3" hidden>
+    <h2>Bracket 3: Upgraded</h2>
+    <p class="lede">The official Commander Brackets are a pregame conversation tool from the Commander Format Panel and Wizards of the Coast, still labeled beta. Bracket 3 is the one this table plays. Each rule below quotes the official wording and links to the article it comes from.</p>
+    <div class="rule gold">Up to three Game Changers. No early two-card infinites. Extra turns in low numbers, never chained. No mass land denial. Expect at least six turns before someone wins or loses.</div>
+
+    <h3>Deckbuilding rules</h3>
+
+    <details class="rulecard">
+      <summary><span><b>Up to three Game Changers</b><span class="gist">A deck may run zero to three cards from the official list.</span></span><span class="plus">+</span><span class="minus">&minus;</span></summary>
+      <div class="body">
+        <dl>
+          <dt>Official</dt><dd class="q">&ldquo;Up to three cards from the Game Changers list.&rdquo; &ldquo;Of course, it doesn&rsquo;t have to have any Game Changers to be a Bracket 3 deck.&rdquo;</dd>
+          <dt>Means</dt><dd>Count the Game Changers in your 99 plus your commander. Three or fewer is Bracket 3. Four or more moves the deck to Bracket 4 regardless of anything else. The full list is further down this tab.</dd>
+          <dt>Examples</dt><dd>Rhystic Study, Cyclonic Rift, Demonic Tutor, Smothering Tithe, Teferi&rsquo;s Protection, The One Ring are all one slot each.</dd>
+        </dl>
+        <p class="src">Source: <a href="https://magic.wizards.com/en/news/announcements/introducing-commander-brackets-beta" target="_blank" rel="noopener">Introducing Commander Brackets (Feb 2025)</a></p>
+      </div>
+    </details>
+
+    <details class="rulecard">
+      <summary><span><b>No intentional early-game two-card infinite combos</b><span class="gist">Cheap two-piece infinites in the first six turns are out.</span></span><span class="plus">+</span><span class="minus">&minus;</span></summary>
+      <div class="body">
+        <dl>
+          <dt>Official</dt><dd class="q">&ldquo;No intentional early-game two-card infinite combos.&rdquo; &ldquo;These decks should generally not have any two-card infinite combos that can happen cheaply in about the first six or so turns of the game, but it&rsquo;s possible the long game could end with one being deployed, even out of nowhere.&rdquo;</dd>
+          <dt>Means</dt><dd>Two cards that together produce an infinite loop, assembled and fired early, is a Bracket 4 play. The same combo landing late in a long game is within Bracket 3. Three-piece combos and combos that need a lot of setup are fine. Intent is the test: a deck built to find and fire the combo early is the problem, not a combo that happens to exist.</dd>
+          <dt>Examples</dt><dd>Out early: Thassa&rsquo;s Oracle + Demonic Consultation, Kiki-Jiki + Zealous Conscripts on turn four off fast mana. Fine: Exquisite Blood + Sanguine Bond assembled on turn nine, Kiki loops as a late finisher.</dd>
+        </dl>
+        <p class="src">Source: <a href="https://magic.wizards.com/en/news/announcements/introducing-commander-brackets-beta" target="_blank" rel="noopener">Introducing Commander Brackets (Feb 2025)</a>; turn guidance in <a href="https://magic.wizards.com/en/news/announcements/commander-brackets-beta-update-october-21-2025" target="_blank" rel="noopener">October 2025 update</a></p>
+      </div>
+    </details>
+
+    <details class="rulecard">
+      <summary><span><b>Extra turns in low quantities, never chained</b><span class="gist">One Time Warp is fine. Looping or chaining them is not.</span></span><span class="plus">+</span><span class="minus">&minus;</span></summary>
+      <div class="body">
+        <dl>
+          <dt>Official</dt><dd class="q">&ldquo;Extra-turn cards should only appear in low quantities and are not intended to be chained in succession or looped.&rdquo;</dd>
+          <dt>Means</dt><dd>A couple of extra-turn spells as individual tempo plays are within bracket. Decks built to take several turns in a row, recur extra-turn spells, or copy them are Bracket 4.</dd>
+          <dt>Examples</dt><dd>Fine: a single Time Warp or Temporal Mastery. Out: Nexus of Fate loops, Eternal Witness recursion of Time Warp, Narset&rsquo;s Reversal on your own extra-turn spell.</dd>
+        </dl>
+        <p class="src">Source: <a href="https://magic.wizards.com/en/news/announcements/introducing-commander-brackets-beta" target="_blank" rel="noopener">Introducing Commander Brackets (Feb 2025)</a></p>
+      </div>
+    </details>
+
+    <details class="rulecard">
+      <summary><span><b>No mass land denial</b><span class="gist">Nothing that wipes, locks, or rewrites lands for the whole table.</span></span><span class="plus">+</span><span class="minus">&minus;</span></summary>
+      <div class="body">
+        <dl>
+          <dt>Official</dt><dd class="q">&ldquo;No mass land denial.&rdquo; Defined as cards that change what mana is produced by four or more lands per player without replacing them, and cards that destroy, exile, bounce, or keep tapped lands at scale.</dd>
+          <dt>Means</dt><dd>Mass land destruction and mana-lock effects are out through Bracket 3. Single-target land removal is allowed. Blood Moon counts as mass land denial under the official definition because it rewrites what nonbasic lands produce.</dd>
+          <dt>Examples</dt><dd>Out: Armageddon, Ruination, Sunder, Winter Orb, Blood Moon, Jokulhaups, Static Orb. Fine: Strip Mine, Ghost Quarter, Beast Within on a land.</dd>
+        </dl>
+        <p class="src">Source: <a href="https://magic.wizards.com/en/news/announcements/introducing-commander-brackets-beta" target="_blank" rel="noopener">Introducing Commander Brackets (Feb 2025)</a></p>
+      </div>
+    </details>
+
+    <details class="rulecard">
+      <summary><span><b>Tutors: no limit</b><span class="gist">The original &ldquo;few tutors&rdquo; guideline was removed in October 2025.</span></span><span class="plus">+</span><span class="minus">&minus;</span></summary>
+      <div class="body">
+        <dl>
+          <dt>Official</dt><dd class="q">Tutor restrictions were removed entirely from Brackets 1 through 3 in the October 2025 update. Combos are now restricted through the combo rule and the turn expectation instead.</dd>
+          <dt>Means</dt><dd>Tutors are fine in any number. The strongest ones (Demonic, Vampiric, Enlightened, Mystical, Worldly, Imperial Seal) are still Game Changers and count toward the three.</dd>
+        </dl>
+        <p class="src">Source: <a href="https://magic.wizards.com/en/news/announcements/commander-brackets-beta-update-october-21-2025" target="_blank" rel="noopener">Commander Brackets Beta Update (Oct 2025)</a></p>
+      </div>
+    </details>
+
+    <h3>What a Bracket 3 game is expected to feel like</h3>
+    <p class="lede">The October 2025 update added expectation language so a bracket describes a game, not only a card list. For Bracket 3:</p>
+    <ul class="check sting">
+      <li>Decks powered up with strong synergy and high card quality; they can effectively disrupt opponents.</li>
+      <li>Game Changers that are likely to be value engines and game-ending spells.</li>
+      <li>Win conditions that can be deployed in one big turn from hand, usually because of steadily accrued resources.</li>
+      <li>Gameplay that features many proactive and reactive plays.</li>
+      <li>At least six turns before you win or lose.</li>
+    </ul>
+    <p class="src">Source: <a href="https://magic.wizards.com/en/news/announcements/commander-brackets-beta-update-october-21-2025" target="_blank" rel="noopener">Commander Brackets Beta Update (Oct 2025)</a></p>
+
+    <h3>Bracket 3 next to its neighbors</h3>
+    <table class="cmp">
+      <thead><tr><th></th><th>2 Core</th><th>3 Upgraded</th><th>4 Optimized</th></tr></thead>
+      <tbody>
+        <tr><td>Game Changers</td><td>None</td><td class="b3">Up to 3</td><td>Any</td></tr>
+        <tr><td>2-card infinites</td><td>None</td><td class="b3">Not early</td><td>Allowed</td></tr>
+        <tr><td>Extra turns</td><td>Few, no chains</td><td class="b3">Few, no chains</td><td>Allowed</td></tr>
+        <tr><td>Mass land denial</td><td>None</td><td class="b3">None</td><td>Allowed</td></tr>
+        <tr><td>Tutors</td><td>No limit</td><td class="b3">No limit</td><td>No limit</td></tr>
+        <tr><td>Turns before a win</td><td>8+</td><td class="b3">6+</td><td>No guidance</td></tr>
+      </tbody>
+    </table>
+
+    <h3>The Game Changers list</h3>
+    <p class="lede">53 cards as of the February 2026 update. Cards marked new were added in that update.</p>
+    <details class="rulecard">
+      <summary><span><b>Show all 53</b><span class="gist">Grouped by color. Lands sit with their color.</span></span><span class="plus">+</span><span class="minus">&minus;</span></summary>
+      <div class="body">
+        <div class="gc-group">White</div>
+        <ul class="gc"><li>Drannith Magistrate</li><li>Enlightened Tutor</li><li class="new">Farewell</li><li>Humility</li><li>Serra&rsquo;s Sanctum</li><li>Smothering Tithe</li><li>Teferi&rsquo;s Protection</li></ul>
+        <div class="gc-group">Blue</div>
+        <ul class="gc"><li>Consecrated Sphinx</li><li>Cyclonic Rift</li><li>Fierce Guardianship</li><li>Force of Will</li><li>Gifts Ungiven</li><li>Intuition</li><li>Mystical Tutor</li><li>Narset, Parter of Veils</li><li>Rhystic Study</li><li>Thassa&rsquo;s Oracle</li></ul>
+        <div class="gc-group">Black</div>
+        <ul class="gc"><li>Ad Nauseam</li><li>Bolas&rsquo;s Citadel</li><li>Braids, Cabal Minion</li><li>Demonic Tutor</li><li>Imperial Seal</li><li>Necropotence</li><li>Opposition Agent</li><li>Orcish Bowmasters</li><li>Tergrid, God of Fright</li><li>Vampiric Tutor</li></ul>
+        <div class="gc-group">Red</div>
+        <ul class="gc"><li>Gamble</li><li>Jeska&rsquo;s Will</li><li>Underworld Breach</li></ul>
+        <div class="gc-group">Green</div>
+        <ul class="gc"><li class="new">Biorhythm</li><li>Crop Rotation</li><li>Gaea&rsquo;s Cradle</li><li>Natural Order</li><li>Seedborn Muse</li><li>Survival of the Fittest</li><li>Worldly Tutor</li></ul>
+        <div class="gc-group">Multicolor</div>
+        <ul class="gc"><li>Aura Shards</li><li>Coalition Victory</li><li>Grand Arbiter Augustin IV</li><li>Notion Thief</li></ul>
+        <div class="gc-group">Colorless</div>
+        <ul class="gc"><li>Ancient Tomb</li><li>Chrome Mox</li><li>Field of the Dead</li><li>Glacial Chasm</li><li>Grim Monolith</li><li>Lion&rsquo;s Eye Diamond</li><li>Mana Vault</li><li>Mishra&rsquo;s Workshop</li><li>Mox Diamond</li><li>Panoptic Mirror</li><li>The One Ring</li><li>The Tabernacle at Pendrell Vale</li></ul>
+        <p class="src">Removed in Oct 2025: Expropriate, Jin-Gitaxias Core Augur, Sway of the Stars, Vorinclex Voice of Hunger, Kinnan, Urza Lord High Artificer, Winota, Yuriko, Deflecting Swat, Food Chain. Sources: <a href="https://magic.wizards.com/en/news/announcements/commander-brackets-beta-update-april-22-2025" target="_blank" rel="noopener">Apr 2025</a>, <a href="https://magic.wizards.com/en/news/announcements/commander-brackets-beta-update-october-21-2025" target="_blank" rel="noopener">Oct 2025</a>, <a href="https://magic.wizards.com/en/news/announcements/commander-brackets-beta-update-february-9-2026" target="_blank" rel="noopener">Feb 2026</a>.</p>
+      </div>
+    </details>
+
+    <h3>Official sources</h3>
+    <ul class="links">
+      <li><a href="https://magic.wizards.com/en/news/announcements/introducing-commander-brackets-beta" target="_blank" rel="noopener">Introducing Commander Brackets (Beta)</a><span>Wizards of the Coast, February 2025. The original definitions and deckbuilding rules for all five brackets.</span></li>
+      <li><a href="https://magic.wizards.com/en/news/announcements/commander-brackets-beta-update-april-22-2025" target="_blank" rel="noopener">Commander Brackets Beta Update, April 22, 2025</a><span>Game Changers list expanded; intent reaffirmed as the core of the system.</span></li>
+      <li><a href="https://magic.wizards.com/en/news/announcements/commander-brackets-beta-update-october-21-2025" target="_blank" rel="noopener">Commander Brackets Beta Update, October 21, 2025</a><span>Expectation language per bracket, turn guidance, tutor limits removed, ten cards off the Game Changers list.</span></li>
+      <li><a href="https://magic.wizards.com/en/news/announcements/commander-brackets-beta-update-february-9-2026" target="_blank" rel="noopener">Commander Brackets Beta Update, February 9, 2026</a><span>Farewell and Biorhythm added; no bracket-level changes.</span></li>
+      <li><a href="https://mtgcommander.net/index.php/rules/" target="_blank" rel="noopener">Commander Format Rules</a><span>The Commander Format Panel&rsquo;s official rules page, including the banned list.</span></li>
+    </ul>
+    <p class="src">Checked against the articles above on October 17, 2026. The system is still in beta; if a newer update changes a rule, the newer article wins.</p>
   </section>
 
   <!-- ============ SIGN ============ -->
@@ -996,7 +1174,7 @@ function showSeg(id) {
 segBtns.forEach(b => b.addEventListener("click", () => showSeg(b.id)));
 
 const hash = (location.hash || "").replace("#", "");
-if (["play", "rules", "sign"].includes(hash)) showTab("tab-" + hash);
+if (["play", "rules", "b3", "sign"].includes(hash)) showTab("tab-" + hash);
 
 /* ============================================================
    SIGN
